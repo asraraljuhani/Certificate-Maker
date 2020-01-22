@@ -3,8 +3,8 @@ var ctx = c.getContext("2d");
 var image = new Image();
 var file;
 var data;
-var name='اسم الطالبة';
-var names=[];
+var name = 'اسم الطالبة';
+var names = [];
 colorWell = document.querySelector("#colorWell");
 ctx.textAlign = 'center';
 var color = '#000000';
@@ -41,12 +41,16 @@ function onLoadImg(x, y) {
   c.width = width;
   c.height = height;
   ctx.font = size + "px Comic Sans MS";
-  ctx.textAlign = 'center';
+  // ctx.textAlign = 'center'; was here before I dont know why?
   ctx.fillStyle = color;
   ctx.drawImage(image, 0, 0, width, height);
+  c.setAttribute('dir', 'ltr');
+  ctx.direction = 'rtl';
   ctx.fillText(name, x, y);
+
 }
-function sizeD(){
+
+function sizeD() {
   size -= 1;
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   image.onload = () => {
@@ -54,7 +58,8 @@ function sizeD(){
   }
   image.src = data;
 }
-function sizeI(){
+
+function sizeI() {
   size += 1;
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   image.onload = () => {
@@ -62,7 +67,8 @@ function sizeI(){
   }
   image.src = data;
 }
-function up(){
+
+function up() {
   y -= 10
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   image.onload = () => {
@@ -70,7 +76,8 @@ function up(){
   }
   image.src = data;
 }
-function down(){
+
+function down() {
   y += 10;
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   image.onload = () => {
@@ -78,16 +85,18 @@ function down(){
   }
   image.src = data;
 }
-function right(){
-x += 10;
+
+function right() {
+  x += 10;
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   image.onload = () => {
     onLoadImg(x, y);
   }
   image.src = data;
 }
-function left(){
-x -= 10;
+
+function left() {
+  x -= 10;
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   image.onload = () => {
     onLoadImg(x, y);
@@ -105,10 +114,10 @@ function logKey(e) {
     right();
   }
   if (e.keyCode === 38) { //up
-  up();
+    up();
   }
   if (e.keyCode === 40) { //down
-  down();
+    down();
   }
   if (e.keyCode === 189) { //-
     sizeD();
@@ -133,26 +142,30 @@ colorWell.addEventListener("input", () => {
   }
   image.src = data;
 });
-function addName(){
-name=document.getElementById("name").value;
+
+function addName() {
+  name = document.getElementById("name").value;
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   image.onload = () => {
     onLoadImg(x, y);
   }
   image.src = data;
 }
-function addNames(){
-names=document.getElementById("names").value.split('\n');
-// ctx.clearRect(0, 0, canvas.width, canvas.height);
-// image.onload = () => {
-//   onLoadImg(x, y);
-// }
-// image.src = data;
+
+function addNames() {
+  names = document.getElementById("names").value.split('\n');
+  // ctx.clearRect(0, 0, canvas.width, canvas.height);
+  // image.onload = () => {
+  //   onLoadImg(x, y);
+  // }
+  // image.src = data;
 }
-function saveEveryName(StudentName){
-  name=StudentName;
+
+function saveEveryName(StudentName) {
+  name = StudentName;
 
 }
+
 function saveFile() {
   c.toBlob(function(blob) {
     // blob ready, download it
@@ -165,21 +178,20 @@ function saveFile() {
   }, 'image/png');
 }
 
-function saveZip(){
-var imgUrl;
-var zip = new JSZip();
-for(let i=0;i<names.length;i++){
-  name=names[i];
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  onLoadImg(x, y);
-  image.src = data;
-  imgUrl = c.toDataURL();
- zip.file("certificate"+[i+1]+".png", imgUrl.split('base64,')[1], {base64: true});
-}
+function saveZip() {
+  var imgUrl;
+  var zip = new JSZip();
+  for (let i = 0; i < names.length; i++) {
+    name = names[i];
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    onLoadImg(x, y);
+    image.src = data;
+    imgUrl = c.toDataURL();
+    zip.file("certificate" + [i + 1] + ".png", imgUrl.split('base64,')[1], {base64: true});
+  }
 
-zip.generateAsync({type:"blob"})
-.then(function(content) {
+  zip.generateAsync({type: "blob"}).then(function(content) {
     // see FileSaver.js
     saveAs(content, "Certificates.zip");
-});
+  });
 }
